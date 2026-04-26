@@ -20,3 +20,11 @@ export const getPagingData = (count, rows, page, limit) => {
     data: rows,
   };
 };
+
+export const getPaginationResponsecpl = (count, page, limit) => {
+  return { total: count,
+      page,
+      limit,
+      totalPages: Math.ceil(count / limit),
+    }
+};

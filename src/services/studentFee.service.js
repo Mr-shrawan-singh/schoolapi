@@ -1,7 +1,9 @@
+
 import {
   FeeStructureDetail,
   StudentFee,
   StudentFeeDetail,
+   FeePayment, StudentFee 
 } from "../models/index.js";
 
 export const createStudentFee = async (studentAcademicId, feeStructureId) => {
@@ -37,9 +39,6 @@ export const createStudentFee = async (studentAcademicId, feeStructureId) => {
 
   return studentFee;
 };
-
-
-import { FeePayment, StudentFee } from "../models/index.js";
 
 export const addPayment = async (studentFeeId, amount) => {
   await FeePayment.create({

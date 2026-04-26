@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+const aadharSchema = z
+  .string()
+  .transform((val) => val.replace(/\s/g, ""))
+  .refine((val) => /^\d{12}$/.test(val), {
+    message: "Aadhar must be exactly 12 digits",
+  });
+
 // CREATE
 export const createStudentSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -10,12 +17,7 @@ export const createStudentSchema = z.object({
 
   address: z.string().min(1, "Address is required"),
 
- aadhar: z
-  .string()
-  .transform((val) => val.replace(/\s/g, ""))
-  .refine((val) => /^\d{12}$/.test(val), {
-    message: "Aadhar must be exactly 12 digits",
-  }),
+ aadhar: aadharSchema.optional(),
 
   admissionDate: z.string().optional(),
 });
@@ -27,6 +29,6 @@ export const updateStudentSchema = z.object({
   email: z.string().email().optional(),
   phone: z.string().min(10).optional(),
   address: z.string().optional(),
-  aadhar: z.string().length(12).optional(),
+  aadhar: aadharSchema.optional(),
   leavingDate: z.string().optional(),
 });

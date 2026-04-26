@@ -1,3 +1,4 @@
+import { sequelize } from "../config/database.js";
 import User from "./User.model.js";
 import School from "./school.model.js";
 import Subject from "./subject.model.js";
@@ -14,14 +15,21 @@ import FeeStructureDetail from "./feeStructureDetail.model.js";
 import StudentFee from "./studentFee.model.js";
 import StudentFeeDetail from "./studentFeeDetail.model.js";
 import FeePayment from "./feePayment.model.js";
+
+
+// ================= SCHOOL =================
 User.hasOne(School, { foreignKey: "userId", onDelete: "CASCADE" });
 School.belongsTo(User, { foreignKey: "userId" });
-School.hasMany(Subject, { foreignKey: "schoolId", onDelete: "CASCADE" });
 
+// ================= SUBJECT =================
+School.hasMany(Subject, { foreignKey: "schoolId" });
+Subject.belongsTo(School, { foreignKey: "schoolId" });
+
+// ================= CLASS =================
 School.hasMany(Class, { foreignKey: "schoolId" });
 Class.belongsTo(School, { foreignKey: "schoolId" });
 
-// Many-to-Many
+// ================= CLASS-SUBJECT =================
 Class.belongsToMany(Subject, {
   through: ClassSubject,
   foreignKey: "classId",
@@ -32,42 +40,36 @@ Subject.belongsToMany(Class, {
   foreignKey: "subjectId",
 });
 
-Subject.belongsTo(School, { foreignKey: "schoolId" });
-
+// ================= TEACHER =================
 School.hasMany(Teacher, { foreignKey: "schoolId" });
 Teacher.belongsTo(School, { foreignKey: "schoolId" });
-// teacher class assignment
-// Teacher
+
+// ================= TEACHER ASSIGNMENT =================
 Teacher.hasMany(TeacherAssignment, { foreignKey: "teacherId" });
 TeacherAssignment.belongsTo(Teacher, { foreignKey: "teacherId" });
 
-// Class
 Class.hasMany(TeacherAssignment, { foreignKey: "classId" });
 TeacherAssignment.belongsTo(Class, { foreignKey: "classId" });
 
-// Subject
 Subject.hasMany(TeacherAssignment, { foreignKey: "subjectId" });
 TeacherAssignment.belongsTo(Subject, { foreignKey: "subjectId" });
 
 School.hasMany(TeacherAssignment, { foreignKey: "schoolId" });
 TeacherAssignment.belongsTo(School, { foreignKey: "schoolId" });
 
-
-// student 
-Student.hasMany(StudentAcademic, { foreignKey: "studentId" });
-StudentAcademic.belongsTo(Student, { foreignKey: "studentId" });
-
-// Class ↔ Academic
-Class.hasMany(StudentAcademic, { foreignKey: "classId" });
-StudentAcademic.belongsTo(Class, { foreignKey: "classId" });
-
+// ================= STUDENT =================
 Student.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
 
 Student.hasMany(StudentAcademic, { foreignKey: "studentId" });
 StudentAcademic.belongsTo(Student, { foreignKey: "studentId" });
+
+Class.hasMany(StudentAcademic, { foreignKey: "classId" });
+StudentAcademic.belongsTo(Class, { foreignKey: "classId" });
+
 School.hasMany(StudentAcademic, { foreignKey: "schoolId" });
 StudentAcademic.belongsTo(School, { foreignKey: "schoolId" });
 
+// ================= STUDENT SUBJECT =================
 StudentAcademic.belongsToMany(Subject, {
   through: StudentAcademicSubject,
   foreignKey: "studentAcademicId",
@@ -78,14 +80,51 @@ Subject.belongsToMany(StudentAcademic, {
   foreignKey: "subjectId",
 });
 
-FeeStructure.hasMany(FeeStructureDetail);
-FeeStructureDetail.belongsTo(FeeStructure);
 
-StudentFee.hasMany(StudentFeeDetail);
-StudentFeeDetail.belongsTo(StudentFee);
+// ================= FEE MODULE (FIXED 🔥) =================
 
-StudentFee.hasMany(FeePayment);
-FeePayment.belongsTo(StudentFee);
+// FeeType
+School.hasMany(FeeType, { foreignKey: "schoolId" });
+FeeType.belongsTo(School, { foreignKey: "schoolId" });
 
+// FeeStructure
+School.hasMany(FeeStructure, { foreignKey: "schoolId" });
+FeeStructure.belongsTo(School, { foreignKey: "schoolId" });
 
-export { User, School, Subject, Class, ClassSubject,Teacher,TeacherAssignment, Student, StudentAcademic, StudentAcademicSubject };
+Class.hasMany(FeeStructure, { foreignKey: "classId" });
+FeeStructure.belongsTo(Class, { foreignKey: "classId" });
+
+// FeeStructureDetail
+FeeStructure.hasMany(FeeStructureDetail, { foreignKey: "feeStructureId" });
+FeeStructureDetail.belongsTo(FeeStructure, { foreignKey: "feeStructureId" });
+
+FeeType.hasMany(FeeStructureDetail, { foreignKey: "feeTypeId" });
+FeeStructureDetail.belongsTo(FeeType, { foreignKey: "feeTypeId" });
+
+// StudentFee
+StudentAcademic.hasOne(StudentFee, { foreignKey: "studentAcademicId" });
+StudentFee.belongsTo(StudentAcademic, { foreignKey: "studentAcademicId" });
+
+School.hasMany(StudentFee, { foreignKey: "schoolId" });
+StudentFee.belongsTo(School, { foreignKey: "schoolId" });
+
+// StudentFeeDetail
+StudentFee.hasMany(StudentFeeDetail, { foreignKey: "studentFeeId" });
+StudentFeeDetail.belongsTo(StudentFee, { foreignKey: "studentFeeId" });
+
+FeeType.hasMany(StudentFeeDetail, { foreignKey: "feeTypeId" });
+StudentFeeDetail.belongsTo(FeeType, { foreignKey: "feeTypeId" });
+
+// Payment
+StudentFee.hasMany(FeePayment, { foreignKey: "studentFeeId" });
+FeePayment.belongsTo(StudentFee, { foreignKey: "studentFeeId" });
+
+School.hasMany(FeePayment, { foreignKey: "schoolId" });
+FeePayment.belongsTo(School, { foreignKey: "schoolId" });
+
+export { User, School, 
+  Subject, Class, ClassSubject,
+  Teacher,TeacherAssignment, Student,
+   StudentAcademic, StudentAcademicSubject
+   , FeeType, FeeStructure, FeeStructureDetail,
+    StudentFee, StudentFeeDetail, FeePayment,sequelize };

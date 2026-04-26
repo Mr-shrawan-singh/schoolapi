@@ -4,7 +4,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 // CREATE
 export const createClass = asyncHandler(async (req, res) => {
-console.log(req.user, "User info in createClass controller");
   const data = await classService.createClass({...req.body, schoolId: req.user.schoolId});
 
   sendResponse({

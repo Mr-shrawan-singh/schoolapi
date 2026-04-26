@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 const StudentFee = sequelize.define("StudentFee", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-
+  schoolId: { type: DataTypes.INTEGER, allowNull: false },
   studentAcademicId: DataTypes.INTEGER,
   feeStructureId: DataTypes.INTEGER,
 

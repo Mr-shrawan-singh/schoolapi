@@ -12,6 +12,10 @@ import teacherRoutes from "./routes/teacher.route.js";
 import teacherAssignmentRoutes from "./routes/teacherAssignment.route.js";
 import studentRoutes from "./routes/student.routes.js";
 import studentAcademicRoutes from "./routes/studentAcademic.routes.js";
+import FeeTypeRoutes from "./routes/feeType.routes.js";
+import feeStructureRoutes from "./routes/feeStructure.route.js";
+import feeStructureDetailsRoutes from "./routes/feeStructureDetails.routes.js";
+import feeManagementRoutes from "./routes/feeManagement.routes.js";
 
 const app = express();
 app.use(cors());
@@ -28,5 +32,12 @@ app.use("/teachers", protect, teacherRoutes);
 app.use("/teacher_assignments",protect,teacherAssignmentRoutes);
 app.use("/students", protect, studentRoutes );
 app.use("/student_academic", protect, studentAcademicRoutes);
+
+// fee structure details
+
+app.use("/fee_types", protect, FeeTypeRoutes);
+app.use("/fee_structures", protect, feeStructureRoutes);
+app.use("/fee_structures_details", protect, feeStructureDetailsRoutes);
+app.use("/fee_management", protect, feeManagementRoutes);
 app.use(errorHandler);
 export default app;

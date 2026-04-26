@@ -1,14 +1,39 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
 
-const FeeStructureDetail = sequelize.define("FeeStructureDetail", {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+const FeeStructureDetail = sequelize.define(
+  "FeeStructureDetail",
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    schoolId: { type: DataTypes.INTEGER, allowNull: false },
+    feeStructureId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
 
-  feeStructureId: DataTypes.INTEGER,
-  feeTypeId: DataTypes.INTEGER,
+    feeTypeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
 
-  amount: DataTypes.DECIMAL(10, 2),
+    amount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
 
-  label: DataTypes.STRING, // Event 1, Event 2
-});
+    label: {
+      type: DataTypes.STRING, // e.g., Term 1, Event 1
+      allowNull: true,
+    },
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["feeStructureId", "feeTypeId", "label"], // prevent duplicates
+      },
+    ],
+  }
+);
+
 export default FeeStructureDetail;
