@@ -5,21 +5,21 @@ dotenv.config();
 const envSchema = z.object({
   PORT: z.string().default("3000"),
 
-  DB_NAME: z.string({
-    required_error: "DB_NAME is required",
-  }),
+  // DB_NAME: z.string({
+  //   required_error: "DB_NAME is required",
+  // }),
 
-  DB_USER: z.string({
-    required_error: "DB_USER is required",
-  }),
+  // DB_USER: z.string({
+  //   required_error: "DB_USER is required",
+  // }),
 
-  DB_PASSWORD: z.string({
-    required_error: "DB_PASSWORD is required",
-  }),
+  // DB_PASSWORD: z.string({
+  //   required_error: "DB_PASSWORD is required",
+  // }),
 
-  DB_HOST: z.string({
-    required_error: "DB_HOST is required",
-  }),
+  // DB_HOST: z.string({
+  //   required_error: "DB_HOST is required",
+  // }),
 
   DB_DIALECT: z.string().default("postgres"),
   JWT_SECRET: z.string({
